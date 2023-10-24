@@ -17,6 +17,8 @@ import {
   Typography,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const [isButtonActive, setIsButtonActive] = useState(true);
@@ -24,6 +26,8 @@ const Login = () => {
   const [password, setPassword] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -54,7 +58,7 @@ const Login = () => {
         } else if (data.responseStatus === 400){
           setErrorMessage('Requisição invalida!');
         } else if (data.responseStatus === 200) {
-          alert('Requisição válida!');
+          navigate('/tarefas');
         }
       })
       .catch((error) => setErrorMessage("Erro no servidor, tente novamente em alguns minutos!"));
