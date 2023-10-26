@@ -9,21 +9,40 @@ import {
 import Login from "./screens/Login";
 import App from "./App";
 import Tasks from "./screens/Tasks";
+import ProtectedRout from "./provider/protectedRoute";
+import { useAuth } from "./provider/authProvider";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-        <App>
-            <Login />
-        </App>
-    ),
-  },
-  {
-    path: "tarefas",
-    element: <App><Tasks /></App>,
-  },
-]);
+const Routes = () => {
 
-export {router};
+  const authenticatedRoutes = [
+    {
+      path: '/',
+      element: <ProtectedRout />,
+      children: [
+        {
+          path: "/tarefas",
+          element: <Tasks />
+
+        }
+      ]
+    }
+  ]
+
+  const unAuthenticatedRoutes = [
+    {
+      path: '/login',
+      element: <Login />
+    }
+  ]
+
+
+
+  const router = createBrowserRouter([
+    ...unAuthenticatedRoutes,
+    ...authenticatedRoutes]);
+
+  return <RouterProvider router={router} />
+}
+
+export default Routes;
 

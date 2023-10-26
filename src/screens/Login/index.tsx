@@ -18,9 +18,12 @@ import {
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../../provider/authProvider";
 
 const Login = () => {
+
+  const {token, setToken} = useAuth();
+
   const [isButtonActive, setIsButtonActive] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
@@ -32,6 +35,26 @@ const Login = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if (token) {
+      navigate('/tarefas', {replace:true});
+    }
+  }, [token])
+
+  useEffect(() => {
+    if (
+      username !== null &&
+      username !== "" &&
+      password !== null &&
+      password !== ""
+    ) {
+      setIsButtonActive(false);
+    } else {
+      setIsButtonActive(true);
+    }
+  }, [username, password]);
+
   const postLogin = () => {
     const requestOptions = {
       method: "POST",
@@ -58,24 +81,16 @@ const Login = () => {
         } else if (data.responseStatus === 400){
           setErrorMessage('Requisição invalida!');
         } else if (data.responseStatus === 200) {
-          navigate('/tarefas');
+          if (data?.data?.token) {
+            setToken(data?.data?.token);
+          }
+          navigate('/tarefas', {replace: true});
         }
       })
       .catch((error) => setErrorMessage("Erro no servidor, tente novamente em alguns minutos!"));
   };
 
-  useEffect(() => {
-    if (
-      username !== null &&
-      username !== "" &&
-      password !== null &&
-      password !== ""
-    ) {
-      setIsButtonActive(false);
-    } else {
-      setIsButtonActive(true);
-    }
-  }, [username, password]);
+
 
   return (
     <Box
