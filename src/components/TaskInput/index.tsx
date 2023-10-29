@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
 import Button from "@mui/material/Button";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import AddTaskIcon from "@mui/icons-material/AddTask";
 import axios from "axios";
 
 import { url_task } from "../../utils/api";
@@ -15,7 +15,7 @@ const TaskInput = (props: TaskInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [taskDescription, setTaskDescription] = useState<null | string>(null);
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState<null|string>(null);
+  const [error, setError] = useState<null | string>(null);
   const { enqueueSnackbar } = useSnackbar();
 
   const onClick = () => {
@@ -30,7 +30,6 @@ const TaskInput = (props: TaskInputProps) => {
   };
 
   const createTask = async () => {
-
     const payload = {
       // your post data goes here
       id_categoria: category.id,
@@ -55,8 +54,6 @@ const TaskInput = (props: TaskInputProps) => {
       setError((err as Error).message);
       enqueueSnackbar("Erro ao criar a tarefa.", { variant: "error" });
     }
-
-
   };
 
   return (
@@ -67,7 +64,7 @@ const TaskInput = (props: TaskInputProps) => {
             component="label"
             variant="contained"
             onClick={onClick}
-            startIcon={<CloudUploadIcon />}
+            startIcon={<AddTaskIcon />}
           >
             Adicionar Tarefa
           </Button>
@@ -77,14 +74,23 @@ const TaskInput = (props: TaskInputProps) => {
           <Card>
             <CardContent>
               <TextField
+                fullWidth
                 id="standard-basic"
-                label="Standard"
+                label="Qual é a sua tarefa?"
                 variant="standard"
                 value={taskDescription}
                 onChange={(event) => setTaskDescription(event.target.value)}
               />
             </CardContent>
-            <CardActions>
+            <CardActions
+              sx={{
+                alignSelf: "stretch",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-start",
+                p: 2,
+              }}
+            >
               <Button
                 component="label"
                 variant="contained"
