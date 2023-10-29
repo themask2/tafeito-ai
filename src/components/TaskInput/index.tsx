@@ -6,14 +6,14 @@ import Button from "@mui/material/Button";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import axios from "axios";
 
-import { url_task } from "../../utils/api";
+import { url_tasks } from "../../utils/api";
 import { TaskInputProps } from "./TaskInput";
 import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 
 const TaskInput = (props: TaskInputProps) => {
   const { onSelectCreateTask, category } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const [taskDescription, setTaskDescription] = useState<null | string>(null);
+  const [taskDescription, setTaskDescription] = useState<string>("");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState<null | string>(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -25,7 +25,7 @@ const TaskInput = (props: TaskInputProps) => {
 
   const cancelCreateTask = () => {
     onSelectCreateTask(null);
-    setTaskDescription(null);
+    setTaskDescription('');
     setIsOpen(false);
   };
 
@@ -37,7 +37,7 @@ const TaskInput = (props: TaskInputProps) => {
     };
 
     try {
-      const response = await axios.post(url_task, payload, {
+      const response = await axios.post(url_tasks, payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -45,7 +45,7 @@ const TaskInput = (props: TaskInputProps) => {
 
       setResponse(response.data);
       setError(null);
-      setTaskDescription(null);
+      setTaskDescription('');
       onSelectCreateTask(null);
       setIsOpen(false);
       enqueueSnackbar("Tarefa criada!", { variant: "success" });
