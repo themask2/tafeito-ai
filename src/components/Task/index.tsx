@@ -2,8 +2,14 @@ import axios from "axios";
 
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { format, formatDistance, formatRelative, subDays,parseISO } from 'date-fns'
-
+import {
+  format,
+  formatDistance,
+  formatRelative,
+  subDays,
+  parseISO,
+} from "date-fns";
+import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -15,8 +21,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useGlobalContext } from "../../utils/global";
 import DeleteTaskDialog from "../DeleteTaskDialog";
 import { TaskProps } from "./Task";
-import { url_update_task, url_finish_task, url_reopen_task } from "../../utils/api";
+import {
+  url_update_task,
+  url_finish_task,
+  url_reopen_task,
+} from "../../utils/api";
 import { useSnackbar } from "notistack";
+import TaskTags from "../TaskTags";
 
 const Task = (props: TaskProps) => {
   const { task, onTaskChange } = props;
@@ -29,7 +40,6 @@ const Task = (props: TaskProps) => {
 
   const { enqueueSnackbar } = useSnackbar();
   const labelId = `checkbox-list-label-${task.id}`;
-
 
   const finishTask = async () => {
     const taskId = task?.id ?? -1;
@@ -45,7 +55,9 @@ const Task = (props: TaskProps) => {
       setRefectchTaskStatus(refetchtaskStatus + 1);
     } catch (err) {
       setError((err as Error).message);
-      enqueueSnackbar("Erro ao tentar concluir a tarefa.", { variant: "error" });
+      enqueueSnackbar("Erro ao tentar concluir a tarefa.", {
+        variant: "error",
+      });
     }
   };
 
@@ -67,19 +79,17 @@ const Task = (props: TaskProps) => {
     }
   };
 
-
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
       newChecked.push(value);
-      finishTask()
+      finishTask();
     } else {
       newChecked.splice(currentIndex, 1);
-      reopenTask()
+      reopenTask();
     }
-
 
     setChecked(newChecked);
   };
@@ -104,10 +114,11 @@ const Task = (props: TaskProps) => {
 
   const renderFinishedText = () => {
     if (task.data_conclusao) {
-      return format(parseISO(task.data_conclusao), "'Concluído em' dd/MM/yyyy")
+      return format(parseISO(task.data_conclusao), "'Concluído em' dd/MM/yyyy");
     }
     return;
-  }
+  };
+
 
   return (
     <>
@@ -150,10 +161,14 @@ const Task = (props: TaskProps) => {
               inputProps={{ "aria-labelledby": labelId }}
             />
           </ListItemIcon>
-          <ListItemText id={labelId} primary={task.descricao} secondary={renderFinishedText()}/>
-
+          <ListItemText
+            id={labelId}
+            primary={task.descricao}
+            secondary={renderFinishedText()}
+          />
         </ListItemButton>
       </ListItem>
+      <TaskTags task={task}/>
       <DeleteTaskDialog
         task={task}
         openedDialog={openedDialog}
